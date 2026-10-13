@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Punjab College Peshawar Chapter - Result</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f6f3;
+        color: #222;
+    }
+    .header {
+        background: #0b5d3b;
+        color: white;
+        text-align: center;
+        padding: 28px 15px;
+    }
+    .header h1 { margin: 0 0 7px; font-size: 28px; }
+    .header p { margin: 0; font-size: 16px; }
+    .container {
+        max-width: 720px;
+        margin: 35px auto;
+        padding: 0 15px;
+    }
+    .card {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    button {
+        width: 100%;
+        padding: 13px;
+        border: 0;
+        border-radius: 8px;
+        background: #0b5d3b;
+        color: white;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    button:hover { background: #08472d; }
+    #result {
+        display: none;
+        margin-top: 25px;
+        border-top: 3px solid #0b5d3b;
+        padding-top: 20px;
+    }
+    .student-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .info-box {
+        background: #f3f7f4;
+        padding: 12px;
+        border-radius: 8px;
+    }
+    .info-box b { display: block; margin-bottom: 4px; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    th { background: #0b5d3b; color: white; }
+    .summary {
+        margin-top: 18px;
+        padding: 15px;
+        background: #f3f7f4;
+        border-radius: 8px;
+        line-height: 1.8;
+    }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    .error {
+        display: none;
+        color: #b00020;
+        margin-top: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .footer {
+        text-align: center;
+        color: #666;
+        margin: 25px 0;
+        font-size: 13px;
+    }
+    @media (max-width: 500px) {
+        .student-info { grid-template-columns: 1fr; }
+        .header h1 { font-size: 23px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Punjab College</h1>
+    <p>Peshawar Chapter — Result Portal</p>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Check Student Result</h2>
+
+        <label for="rollNumber">Enter Roll Number</label>
+        <input type="text" id="rollNumber" placeholder="e.g. PC-1001">
+
+        <button onclick="searchResult()">Search Result</button>
+
+        <div id="error" class="error">Result not found. Please check the roll number.</div>
+
+        <div id="result">
+            <h2>Student Result</h2>
+
+            <div class="student-info">
+                <div class="info-box">
+                    <b>Student Name</b>
+                    <span id="studentName"></span>
+                </div>
+                <div class="info-box">
+                    <b>Roll Number</b>
+                    <span id="studentRoll"></span>
+                </div>
+                <div class="info-box">
+                    <b>Class</b>
+                    <span id="studentClass"></span>
+                </div>
+                <div class="info-box">
+                    <b>Session</b>
+                    <span id="session"></span>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Total Marks</th>
+                        <th>Obtained</th>
+                    </tr>
+                </thead>
+                <tbody id="marksTable"></tbody>
+            </table>
+
+            <div class="summary">
+                <b>Total Marks:</b> <span id="totalMarks"></span><br>
+                <b>Obtained Marks:</b> <span id="obtainedMarks"></span><br>
+                <b>Percentage:</b> <span id="percentage"></span>%<br>
+                <b>Status:</b> <span id="status"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © Punjab College Peshawar Chapter — Demo Result Portal
+    </div>
+</div>
+
+<script>
+const students = {
+    "PC-1001": {
+        name: "Ali Khan",
+        className: "1st Year",
+        session: "2026",
+        subjects: {
+            "English": [100, 82],
+            "Mathematics": [100, 76],
+            "Physics": [100, 79],
+            "Chemistry": [100, 85],
+            "Urdu": [100, 88]
+        }
+    },
+    "PC-1002": {
+        name: "Ahmed Shah",
+        className: "1st Year",
+        session: "2026",
+        subjects: {
+            "English": [100, 74],
+            "Mathematics": [100, 69],
+            "Physics": [100, 81],
+            "Chemistry": [100, 77],
+            "Urdu": [100, 84]
+        }
+    },
+    "PC-1003": {
+        name: "Usman Ali",
+        className: "1st Year",
+        session: "2026",
+        subjects: {
+            "English": [100, 91],
+            "Mathematics": [100, 88],
+            "Physics": [100, 86],
+            "Chemistry": [100, 90],
+            "Urdu": [100, 87]
+        }
+    }
+};
+
+function searchResult() {
+    const roll = document.getElementById("rollNumber").value.trim().toUpperCase();
+    const student = students[roll];
+    const resultBox = document.getElementById("result");
+    const error = document.getElementById("error");
+
+    if (!student) {
+        resultBox.style.display = "none";
+        error.style.display = "block";
+        return;
+    }
+
+    error.style.display = "none";
+    resultBox.style.display = "block";
+
+    document.getElementById("studentName").textContent = student.name;
+    document.getElementById("studentRoll").textContent = roll;
+    document.getElementById("studentClass").textContent = student.className;
+    document.getElementById("session").textContent = student.session;
+
+    let total = 0;
+    let obtained = 0;
+    let rows = "";
+
+    for (const [subject, marks] of Object.entries(student.subjects)) {
+        total += marks[0];
+        obtained += marks[1];
+        rows += `<tr>
+                    <td>${subject}</td>
+                    <td>${marks[0]}</td>
+                    <td>${marks[1]}</td>
+                 </tr>`;
+    }
+
+    const percentage = ((obtained / total) * 100).toFixed(2);
+    const passed = percentage >= 40;
+
+    document.getElementById("marksTable").innerHTML = rows;
+    document.getElementById("totalMarks").textContent = total;
+    document.getElementById("obtainedMarks").textContent = obtained;
+    document.getElementById("percentage").textContent = percentage;
+
+    const status = document.getElementById("status");
+    status.textContent = passed ? "PASS" : "FAIL";
+    status.className = passed ? "pass" : "fail";
+}
+
+document.getElementById("rollNumber").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") searchResult();
+});
+</script>
+
+</body>
+</html>

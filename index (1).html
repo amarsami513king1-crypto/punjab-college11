@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#12335b">
+  <title>Online Result Portal | Punjab National College</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brandmark" aria-hidden="true">PNC</div>
+    <div><div class="eyebrow">PUNJAB NATIONAL COLLEGE</div><div class="brand-sub">Peshawar Chapter · Online Examination Results</div></div>
+    <button id="adminOpen" class="button button-outline" type="button">System Access</button>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">OFFICIAL RESULT PORTAL</div>
+      <h1>Check Examination Result</h1>
+      <p>Enter your examination details and roll number to view a published marksheet.</p>
+    </section>
+    <section class="panel search-panel">
+      <form id="searchForm">
+        <label for="examination">Examination / Academic Year</label>
+        <select id="examination" required><option value="">Loading examinations…</option></select>
+        <label for="rollNumber">Examination Roll Number</label>
+        <input id="rollNumber" name="rollNumber" required maxlength="40" pattern="[A-Za-z0-9\-/]+" placeholder="Enter roll number" autocomplete="off">
+        <button class="button button-primary full" type="submit">Search Result</button>
+      </form>
+      <p id="searchMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+    <section id="resultArea" class="result-area" hidden></section>
+    <footer>Punjab National College — Peshawar Chapter <span>•</span> Public results display only after authorized publication.</footer>
+  </main>
+
+  <dialog id="adminDialog" class="dialog">
+    <div class="dialog-head"><div><div class="eyebrow">RESTRICTED ACCESS</div><h2>Administrator Sign In</h2></div><button class="icon-button" id="adminClose" aria-label="Close" type="button">×</button></div>
+    <form id="loginForm">
+      <label for="username">Username</label><input id="username" required maxlength="100" autocomplete="username">
+      <label for="password">Password</label><input id="password" type="password" required maxlength="200" autocomplete="current-password">
+      <button class="button button-primary full" type="submit">Sign In</button>
+    </form>
+    <p id="loginMessage" class="message" role="status"></p>
+  </dialog>
+
+  <dialog id="dashboardDialog" class="dialog dialog-wide">
+    <div class="dialog-head"><div><div class="eyebrow">SECURE SYSTEM ACCESS</div><h2>Administrator Dashboard</h2><p id="adminWelcome" class="muted"></p></div><button class="icon-button" id="dashboardClose" aria-label="Close" type="button">×</button></div>
+    <div id="dashboardStats" class="stats"></div>
+    <div class="admin-grid">
+      <section class="subpanel">
+        <h3>Add Student</h3>
+        <form id="studentForm">
+          <label>Student name<input name="student_name" required maxlength="160"></label>
+          <label>Father name<input name="father_name" required maxlength="160"></label>
+          <label>Admission number (optional)<input name="admission_number" maxlength="80"></label>
+          <label>Class<select name="class_id" id="studentClass" required></select></label>
+          <label>Academic year<select name="academic_year_id" id="studentYear" required></select></label>
+          <button class="button button-primary full" type="submit">Save Student</button>
+        </form>
+      </section>
+      <section class="subpanel">
+        <h3>Create Examination</h3>
+        <form id="examForm">
+          <label>Examination name<input name="examination_name" required placeholder="Annual Examination" maxlength="160"></label>
+          <label>Academic year<select name="academic_year_id" id="examYear" required></select></label>
+          <label>Class<select name="class_id" id="examClass"><option value="">All / not specified</option></select></label>
+          <label>Examination type<select name="examination_type" required><option>First Term</option><option>Mid-Term</option><option>Second Term</option><option>Annual Examination</option><option>Other</option></select></label>
+          <label>Examination date<input name="examination_date" type="date"></label>
+          <button class="button button-primary full" type="submit">Create Examination</button>
+        </form>
+      </section>
+      <section class="subpanel">
+        <h3>Configure Examination Subject</h3>
+        <form id="subjectConfigForm">
+          <label>Examination<select name="examination_id" id="configExam" required></select></label>
+          <label>Subject<select name="subject_id" id="configSubject" required></select></label>
+          <label>Maximum marks<input name="maximum_marks" type="number" min="1" step="0.01" required></label>
+          <label>Passing marks (optional)<input name="passing_marks" type="number" min="0" step="0.01"></label>
+          <label>Display order<input name="subject_order" type="number" value="0" step="1"></label>
+          <button class="button button-primary full" type="submit">Add Subject</button>
+        </form>
+      </section>
+      <section class="subpanel">
+        <h3>Save Draft Result</h3>
+        <p class="muted small">Create the student and examination first, then configure every applicable subject.</p>
+        <form id="resultForm">
+          <label>Student ID<input name="student_id" type="number" min="1" required></label>
+          <label>Examination<select name="examination_id" id="resultExam" required></select></label>
+          <label>Roll number<input name="roll_number" required maxlength="40" pattern="[A-Za-z0-9\-/]+"></label>
+          <div id="marksFields"></div>
+          <label>Approved remarks<textarea name="remarks" rows="2" maxlength="500"></textarea></label>
+          <button class="button button-primary full" type="submit">Save Draft Result</button>
+        </form>
+      </section>
+      <section class="subpanel">
+        <h3>Review / Publish Result</h3>
+        <p class="muted small">Use the result ID shown after saving. Publishing makes the marksheet publicly searchable.</p>
+        <form id="publishForm">
+          <label>Result ID<input name="result_id" type="number" min="1" required></label>
+          <button class="button button-primary full" type="submit">Publish Result</button>
+        </form>
+        <hr>
+        <form id="withdrawForm">
+          <label>Result ID<input name="result_id" type="number" min="1" required></label>
+          <label>Reason for withdrawal<textarea name="reason" rows="2" required minlength="5"></textarea></label>
+          <button class="button button-danger full" type="submit">Withdraw Result</button>
+        </form>
+      </section>
+    </div>
+    <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
+    <div class="dialog-actions"><button id="logoutButton" class="button button-outline" type="button">Sign Out</button></div>
+  </dialog>
+  <script src="/app.js" defer></script>
+</body>
+</html>

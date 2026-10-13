@@ -1,0 +1,22 @@
+{
+  "name": "pnc-peshawar-result-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack examination result portal for Punjab National College — Peshawar Chapter",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:migrate": "node src/migrate.js",
+    "admin:create": "node src/create-admin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^10.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "pg": "^8.13.1"
+  }
+}
